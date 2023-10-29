@@ -35,7 +35,7 @@ app.get("/", (req, res)=>{
   Article.findAll({
     order: [
       ['id', 'DESC']
-    ]
+    ], limit: 4
   }).then(articles => {
 
     Category.findAll().then(categories => {
@@ -46,7 +46,7 @@ app.get("/", (req, res)=>{
   });
 });
 
-app.get("/:slug", (req, res)=> {
+app.get("/:slug", (req, res)=>{
   let slug = req.params.slug;
 
   Article.findOne({
@@ -65,6 +65,30 @@ app.get("/:slug", (req, res)=> {
     res.redirect("/");
   })
 
+});
+
+app.get("/category/:slug", (req, res)=>{
+  let slug = req.params.slug;
+
+  Category.findOne({
+    where: {
+      slug: slug
+    },
+    include: [{model: Article}]
+  }).then( category => {
+    if(category != undefined){
+      Category.findAll().then(categories =>{
+        res.render("index", {articles: category.articles, categories: categories});
+      })
+
+    } else {
+      res.redirect("/");
+
+    }
+  }).catch( err => {
+    res.redirect("/");
+
+  })
 });
 
 app.listen(4000, ()=>{
