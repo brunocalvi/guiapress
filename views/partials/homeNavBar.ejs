@@ -5,22 +5,27 @@
       GuiaPress
     </a>
 
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav">
 
       <li class="nav-item">
         <a class="nav-link" href="/">home</a>
       </li>
 
-      <% categories.forEach(category => { %>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Categorias
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <% categories.forEach(category => { %>
+            <a class="dropdown-item" href="/category/<%= category.slug %>"><%= category.title %></a>
+          <% }) %>
+        </div>
+      </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="/category/<%= category.slug %>"><%= category.title %></a>
-        </li>
-
-      <% }) %>
-
-      
-      
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/articles">Aréa Administrativa</a>
+      </li>
+ 
     </ul>
 
   </div>

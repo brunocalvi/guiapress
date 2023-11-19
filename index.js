@@ -1,16 +1,25 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const connection = require("./database/database.js");
+const connection = require("./database/database");
+const session = require("express-session");
 
-const categoriesController = require("./categories/CategoriesController.js");
-const articlesController = require("./articles/ArticlesController.js");
+const categoriesController = require("./categories/CategoriesController");
+const articlesController = require("./articles/ArticlesController");
+const usersController = require("./users/UsersController");
 
-const Article = require("./articles/Article.js");
-const Category = require("./categories/Category.js");
+const Article = require("./articles/Article");
+const Category = require("./categories/Category");
+const User = require("./users/Users");
 
 //VIEW ENGINE
 app.set('view engine', 'ejs');
+
+// SESSION
+
+app.use(session({
+  secret: "secret-full", cookie: {maxAge: 30000000}
+}));
 
 // STATIC
 app.use(express.static('public'));
@@ -30,6 +39,27 @@ connection.authenticate()
 // IMPORTANDO ROTAS
 app.use("/", categoriesController);
 app.use("/", articlesController);
+app.use("/", usersController);
+
+// ROTA DE TESTE DAS SESSIONS
+/*app.get("/session", (req, res) => {
+  req.session.treinamento = "Formação Node.js"
+  req.session.ano = 2023
+  req.session.user = {
+    username: "Usuario Teste",
+    email: "email@email.com",
+    id: 10
+  }
+  res.send("Sessões Geradas")
+});
+
+app.get("/leitura", (req, res) => {
+  res.json({
+    treinamento: req.session.treinamento,
+    ano: req.session.ano,
+    usuario: req.session.user
+  })
+});*/
 
 app.get("/", (req, res)=>{
   Article.findAll({
